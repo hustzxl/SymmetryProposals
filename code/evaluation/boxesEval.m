@@ -92,16 +92,16 @@ for type=1:2
   if(type==1), xs=o.cnts; else xs=o.thrs; end;
   if(length(xs)==1), continue; end; s=[T,M]; M=s(type);
   R=recall; if(type==2), R=permute(R,[2 1 3]); end
-  %figure(f); f=f+1; 
-  %clf; 
-  %hold on; 
+  figure(f); f=f+1; 
+  clf; 
+  hold on; 
   hs=zeros(M,K);
   for i=1:M, for k=1:K, hs(i,k)=plot(xs,R(:,i,k),...
-        o.col,'LineWidth',3); end; end
+        'r','LineWidth',3); end; end
   s={'# of proposals','IoU'}; xlabel(s{type},fSiz{:});
   s={'log','linear'}; set(gca,'XScale',s{type});
   ylabel('Detection Rate',fSiz{:}); set(gca,'YTick',0:.2:1);
-  %hold off; 
+  hold off; 
   axis([min(xs) max(xs) 0 1]); grid on; set(gca,fSiz{:});
   set(gca,'XMinorGrid','off','XMinorTic','off');
   set(gca,'YMinorGrid','off','YMinorTic','off');

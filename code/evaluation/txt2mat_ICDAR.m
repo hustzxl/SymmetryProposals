@@ -48,7 +48,7 @@ end
 if 1%% edge box %%
     
 clc;clear all
-data_dir = '../../ICDAR2013/Result/angel_6/';
+data_dir = '../../ICDAR2013/Result/boost/';
 load('boxes/GroundTruth-ICDAR2013-test.mat');%data
 inds = data.ids;
 bbs = cell(length(inds),1);
@@ -70,12 +70,11 @@ for i=1:length(inds)
    [tmp2,ia,ic]=unique(tmp,'rows');
    bbs_t = bbs_t(ia,:);
    count_proposal = count_proposal + size(bbs_t,1);
-   %[y] = sortrows(bbs_t,5);
    bbs{i} = sortrows(bbs_t,5);
    disp(i)
 end
 disp(count_proposal/length(inds))
-save('boxes/TextProposals-ICDAR-angle12-test','bbs')
+save('boxes/TextProposals-ICDAR-boost-test','bbs')
 end
 
 

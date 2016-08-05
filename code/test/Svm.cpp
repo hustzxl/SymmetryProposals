@@ -19,7 +19,7 @@
 using namespace std;
 using namespace cv;
 
-#define NORM 0
+#define NORM 1
 
 void svm_train(const FeatureCollection& features,const ICDAR2011DataSet& dataset ,vector<int>& false_idx) {
 	size_t feature_count = features.size();

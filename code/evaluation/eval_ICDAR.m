@@ -4,7 +4,7 @@
 split='test'; data=boxesData_ICDAR2013('split',split);
 %nm=cell({'TextProposals-ICDAR-symmetry-labg-fast'});
 %nm=cell({'TextProposals-ICDAR-FULL-symmetry-scale-4-4map-l2-boost50'});
-nm=cell({'TextProposals-ICDAR-angle12'});
+nm=cell({'TextProposals-ICDAR-boost'});
 
 boxesEval('data',data,'names',nm,'thrs',.5,'show',2,'fName','ICDAR2013_2');
 boxesEval('data',data,'names',nm,'thrs',.7,'show',3,'fName','ICDAR2013_3');
