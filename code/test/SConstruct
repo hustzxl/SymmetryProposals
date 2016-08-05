@@ -1,0 +1,27 @@
+import copy
+import os
+env = Environment(ENV = os.environ,CXXFLAGS="-std=c++0x")
+libs = ['vl','opencv_features2d','opencv_ml','opencv_core','opencv_imgproc',  'opencv_highgui','boost_filesystem',
+	 'boost_system']
+inc_path = ['../',
+		 '../cluster/',  
+		 '/usr/local/include/opencv2/','/usr/local/include/boost/',
+		   '../include/' ,
+		   './']
+
+target_name = 'demo'
+src = Glob('./*.cpp') + Glob('../SymmetryFeature/*.cpp') + Glob( '../cluster/*.cpp')
+cpp_flags = ['-pthread', '-fPIC', '-fopenmp','-O2']
+lib_path = ['/usr/local/lib/',]
+link_flags = copy.copy(cpp_flags) + ['-Wl,--rpath=/usr/local/lib/',]
+cpp_defines = ['-D__LINUX__',]
+program = env.Program(
+		target = target_name,
+		source = src,
+		LIBS = libs,
+		LIBPATH = lib_path,
+		CPPFLAGS = cpp_flags,
+		LINKFLAGS = link_flags,
+		CPPPATH = inc_path,
+		CPPDEFINES = cpp_defines,
+)
