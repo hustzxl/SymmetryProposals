@@ -70,26 +70,8 @@ for i=1:length(inds)
    [tmp2,ia,ic]=unique(tmp,'rows');
    bbs_t = bbs_t(ia,:);
    count_proposal = count_proposal + size(bbs_t,1);
-   %bbs_t = [bbs_t(:,1),bbs_t(:,2),bbs_t(:,3)-bbs_t(:,1),bbs_t(:,4)-bbs_t(:,2),bbs_t(:,5)];
-   %bbs{i} = bbs{i}(ia,:);
-   %bbs{i} = bbs_t;
-   [y] = sortrows(bbs_t,5);
-   str2 = '../../ICDAR2013/Result/angel_6/';
-   str3 = '../../ICDAR2013/Images/test/';
-   imgpath = strrep(img_path,str2,str3) ;
-   %imgpath = 
-   imshow( imgpath);
-   hold on;
-   for j = 1: 5
-    rec = y(j,1:4);
-    rectangle('Position',rec,'LineWidth',2,'EdgeColor','y');
-   end
-   saveas(gcf,['./test/' num2str(i) '.jpg']);
-   %bbs{i} = sortrows(bbs_t,5);
-   hold off;
-   %max_count = min(1000,size(ia,1));
-   %ppp = sortrows(bbs_t,5);
-   %bbs{i} = ppp(1:max_count,:);
+   %[y] = sortrows(bbs_t,5);
+   bbs{i} = sortrows(bbs_t,5);
    disp(i)
 end
 disp(count_proposal/length(inds))
