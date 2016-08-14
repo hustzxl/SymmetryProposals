@@ -1,6 +1,6 @@
 #include "region.h"
 #include "voronoi.h" //voronoi_skeleton by Arnaud Ramey <arnaud.a.ramey@gmail.com>
-
+#include<assert.h>
 #include <algorithm>
 #include <cassert>
 #include <limits>
@@ -43,14 +43,27 @@ void Region::extract_features(Mat& _lab_img, Mat& _grey_img, Mat& _gradient_magn
 
   Mat tmp_mask;
 
+  Mat crop2 = mask( bbox );
+  Mat crop = Mat::zeros(crop2.size() ,CV_8UC1 );
+  uchar* pt = (uchar*)crop.data;
+  
+  for ( int i = 0; i < bbox.height ; i++ ) {
+	  int start1 = bbox.y + i;
+	  for ( int j = 0; j < bbox.width ; j++ ) {
+		  int start2 = bbox.x + j;
+		*pt = mptr[ start1  * mask.cols  + start2 ];
+		pt++;
+	}
+  }
+  
   if (conf[4])
   {
     Mat dt;
     distanceTransform(mask(bbox_), dt, CV_DIST_L1,3); //L1 gives distance in round integers
     VoronoiSkeleton skel;
-    skel.thin(mask(bbox),IMPL_GUO_HALL_FAST,false);
-    skel.get_skeleton()(Rect(bbox_.x-bbox.x,bbox_.y-bbox.y,
-      bbox_.width,bbox_.height)).copyTo(tmp_mask); // TODO is this efficient?
+    
+	skel.thin( crop ,IMPL_GUO_HALL_FAST,false);
+    skel.get_skeleton()(Rect(bbox_.x-bbox.x,bbox_.y-bbox.y,bbox_.width,bbox_.height)).copyTo(tmp_mask); // TODO is this efficient?
     m = mean(dt,tmp_mask);
     stroke_mean_ = m[0];
   }

@@ -9,6 +9,7 @@
 #include<string>
 #include<vector>
 #include <time.h>       /* time */
+#include<assert.h>
 #include<highgui/highgui.hpp>
 #include<features2d/features2d.hpp>
 #include<imgproc/imgproc.hpp>
@@ -31,15 +32,7 @@ static string Phase[2] = {"train", "test"};
 static string Image[2] = {"../ICDAR2013","../SVT"};
 
 int getProposals( const string& ImagePath,const int delta, vector<Rect>& outputProposal,vector< vector<float> >& proposal_feature) {
-	//const string ResultPath = "../ICDAR2013/Result";
-    
-	//CmFile::MkDir(ResultPath + "/test/");
-    //string ImageName = CmFile::GetFileNameWithoutExtension(ImagePath);
-    //string full_file_path = ResultPath + "/test/" + fileName + ".txt"; 
-    //std::cout<<full_file_path<<std::endl;
-
     Mat src, img, grey, lab_img, gradient_magnitude;
-    // Pipeline configuration
     // initialize random seed: 
 	srand (time(NULL));
 	img = imread(ImagePath.c_str());
@@ -47,15 +40,17 @@ int getProposals( const string& ImagePath,const int delta, vector<Rect>& outputP
 		std::cout<<"image is empty "<<ImagePath<<endl;
 		exit(1);
 	}
-    img.copyTo(src);
+    
+	img.copyTo(src);
 	int img_area = img.cols*img.rows;
-    cv::MSER cv_mser(delta,(int)(0.00002*img_area),(int)(0.11*img_area),55,0.);
+   
+	cv::MSER cv_mser(delta,(int)(0.00002*img_area),(int)(0.11*img_area),55,0.);
 	
 	cvtColor(img, grey, CV_BGR2GRAY);
     cvtColor(img, lab_img, CV_BGR2Lab);
     gradient_magnitude = Mat_<double>(img.size());
     get_gradient_magnitude( grey, gradient_magnitude);
-	
+
 	vector<Mat> channels;
     split(img, channels);
     channels.push_back(grey);
@@ -80,7 +75,7 @@ int getProposals( const string& ImagePath,const int delta, vector<Rect>& outputP
     {
 
 		if (!conf_channels[c%4]) continue;
-
+		
         if (channels[c].size() != grey.size()) // update sizes for smaller pyramid lvls
         {
           resize(grey,grey,Size(channels[c].cols,channels[c].rows));
@@ -89,10 +84,10 @@ int getProposals( const string& ImagePath,const int delta, vector<Rect>& outputP
         }
 
         // Initial over-segmentation using MSER algorithm /
-        vector<vector<Point> > contours;
+        vector< vector<Point> > contours;
         double t = (double)getTickCount();
         cv_mser(channels[c], contours);
-        cout << " OpenCV MSER found " << contours.size() << " regions in " << ((double)getTickCount() - t)*1000/getTickFrequency() << " ms." << endl;
+        //cout << " OpenCV MSER found " << contours.size() << " regions in " << ((double)getTickCount() - t)*1000/getTickFrequency() << " ms." << endl;
    
         // Extract simple features for each region // 
         vector<Region> regions;
@@ -100,14 +95,14 @@ int getProposals( const string& ImagePath,const int delta, vector<Rect>& outputP
         double max_stroke = 0;
         for (int i=contours.size()-1; i>=0; i--)
         {
-            Region region;
+			Region region;
             region.pixels_.push_back(Point(0,0)); //cannot swap an empty vector
             region.pixels_.swap(contours[i]);
-            region.extract_features(lab_img, grey, gradient_magnitude, mask, conf_cues);
+
+			region.extract_features(lab_img, grey, gradient_magnitude, mask, conf_cues);
             max_stroke = max(max_stroke, region.stroke_mean_);
             regions.push_back(region);
         }
-
         // Single Linkage Clustering for each individual cue //
         
         for (int cue=0; cue<5; cue++)
@@ -146,7 +141,7 @@ int getProposals( const string& ImagePath,const int delta, vector<Rect>& outputP
 			HierarchicalClustering h_clustering(regions);
 			vector<HCluster> dendrogram;
 			h_clustering(data, N, dim, (unsigned char)0, (unsigned char)3, dendrogram);
-            //std:;cout<<"dendrogram size: "<<dendrogram.size()<<std::endl;
+			//std::cout<<"dendrogram size: "<<dendrogram.size()<<std::endl;
             
 			for (int k=0; k<dendrogram.size(); k++) {
 				int ml = 1;

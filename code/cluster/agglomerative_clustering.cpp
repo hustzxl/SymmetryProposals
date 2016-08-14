@@ -126,8 +126,8 @@ void HierarchicalClustering::build_merge_info(t_float *Z, t_float *X, int N, int
 	merge_info.push_back(cluster);
 
 	//boost predict no need now 
-	float votes_group = boost.predict( Mat(sample), Mat(), Range::all(), false, true );
-	cluster.probability = (double)1-(double)1/(1+exp(-2*votes_group));
+//	float votes_group = boost.predict( Mat(sample), Mat(), Range::all(), false, true );
+//	cluster.probability = (double)1-(double)1/(1+exp(-2*votes_group));
     
     }
 }

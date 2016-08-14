@@ -1,4 +1,3 @@
-
 #include "min_bounding_box.h"
   
 Minibox::Minibox()

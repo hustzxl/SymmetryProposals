@@ -84,6 +84,7 @@ void ICDAR2011DataSet::LoadCharacterAnnotation(const string file_path, vector< v
 
 ICDAR2011DataSet::ICDAR2011DataSet(const string &_work_dir)
 {
+	string feature_type = "full_labgto/";
 	work_dir = _work_dir;
 	image_dir = work_dir + "Images/";
 	annotation_dir = work_dir + "Annotation/";
@@ -91,16 +92,23 @@ ICDAR2011DataSet::ICDAR2011DataSet(const string &_work_dir)
 	result_dir = work_dir + "Result/";
 	if ( !CmFile::FileExist( result_dir ) )
 		CmFile::MkDir(result_dir);
-	result_dir += "boost/";
+	result_dir += feature_type;
 	if ( !CmFile::FileExist( result_dir ) )
 		CmFile::MkDir(result_dir);
-	model_dir = work_dir + "Model/";
+	
+	if ( !CmFile::FileExist( feature_dir ) )
+		CmFile::MkDir(feature_dir);
+	feature_dir += feature_type;
 	if ( !CmFile::FileExist( feature_dir ) )
 		CmFile::MkDir(feature_dir);
 	
+	model_dir = work_dir + "Model/";
 	if ( !CmFile::FileExist( model_dir ) )
 		CmFile::MkDir(model_dir);
-	
+	model_dir += feature_type;
+	if ( !CmFile::FileExist( model_dir ) )
+		CmFile::MkDir(model_dir);
+
 	CmFile::GetNames(image_dir + "train/", "*.jpg", train_set);
 	CmFile::GetNames(image_dir + "test/", "*.jpg", test_set);
 

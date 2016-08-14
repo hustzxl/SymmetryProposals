@@ -54,10 +54,5 @@ int main( int argv, char** argc ) {
 	TrainPhase( dataset, delta, 1 );
 	cout<<"start test  --------------------------- "<<endl;
     
-	double t = static_cast<double>(getTickCount());
 	TestPhase( dataset, delta, 0 );
-	double total = ((static_cast<double>(getTickCount()) - t) * 1000 )/getTickFrequency();
-	
-	std::cout<<"total time: "<<total<<" ms"<<std::endl;
-	std::cout<<"per time: "<<total/dataset.test_num<<" ms"<<std::endl;
 }

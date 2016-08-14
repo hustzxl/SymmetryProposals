@@ -133,7 +133,8 @@ int GetFeature( const ICDAR2011DataSet& dataset, const int delta, bool train , F
 		features_buff.insert(features_buff.end(), feature_tmp.begin(), feature_tmp.end());
 		proposalLen.push_back( feature_tmp.size() );
 		Proposal.push_back( proposal );
-		assert( proposal.size() == feature_tmp.size() );
+		//cout<<proposal.size()<<'\t'<<feature_tmp.size()<<endl;
+		//assert( proposal.size() == feature_tmp.size() );
 	}	
 	//random_shuffle(features_buff.begin(),features_buff.end());
 }

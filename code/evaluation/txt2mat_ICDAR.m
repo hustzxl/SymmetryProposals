@@ -48,7 +48,8 @@ end
 if 1%% edge box %%
     
 clc;clear all
-data_dir = '../../ICDAR2013/Result/boost/';
+%data_dir = '../../ICDAR2013/Result/boost/';
+data_dir = '../../../SymmetryProposals/ICDAR2013/Result/full_labtg/'
 load('boxes/GroundTruth-ICDAR2013-test.mat');%data
 inds = data.ids;
 bbs = cell(length(inds),1);
@@ -57,14 +58,14 @@ for i=1:length(inds)
    name = char(inds(i));
    img_path = [data_dir,name];
    %proposal_path = [img_path(1:end-4)];
-   proposal_path = [img_path(1:end-4),'.txt'];
+   proposal_path = [img_path(1:end-4),'.txt']
    bbs{i} = textread(proposal_path);%,'%d %d %d %d %f')%the scored is right?
    bbs_t = bbs{i};
    if(isempty(bbs_t))
        bbs{i} = zeros(0,5);
        continue;
    end
-   bbs_t = [bbs_t(:,1),bbs_t(:,2),bbs_t(:,3),bbs_t(:,4),1*bbs_t(:,5)];%multiplye -1 is need
+   bbs_t = [bbs_t(:,1),bbs_t(:,2),bbs_t(:,3),bbs_t(:,4),-1*bbs_t(:,5)];%multiplye -1 is need
    bbs_t = sortrows(bbs_t,5);
    tmp = bbs_t(:,1:4);
    [tmp2,ia,ic]=unique(tmp,'rows');
@@ -74,7 +75,7 @@ for i=1:length(inds)
    disp(i)
 end
 disp(count_proposal/length(inds))
-save('boxes/TextProposals-ICDAR-boost-test','bbs')
+save('boxes/TextProposals-ICDAR-full-labtg-test','bbs')
 end
 
 
